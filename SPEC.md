@@ -30,7 +30,7 @@ Build date: 2026-10-21. Build harness: DSH (spec-first).
 Open-Meteo forecast API. No key required.
 
 - Base URL: `https://api.open-meteo.com/v1/forecast`
-- Daily variables: `et0_fao_evapotranspiration` (mm), `precipitation_sum` (mm), `rain_sum` (mm).
+- Daily variables: `et0_fao_evapotranspiration` (mm) and `precipitation_sum` (mm).
 - Soil moisture variable: `soil_moisture_1_to_3cm` (m³/m³). Optional seed for the model.
 - `timezone=auto` returns local times for the garden.
 - `past_days` up to 92. `forecast_days` up to 16.
