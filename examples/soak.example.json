@@ -1,0 +1,45 @@
+{
+  "version": 1,
+  "dataDir": "data",
+  "garden": {
+    "name": "Backyard beds",
+    "latitude": -33.7254,
+    "longitude": 151.0487
+  },
+  "zones": [
+    {
+      "id": "toms",
+      "name": "Tomato bed",
+      "areaM2": 4.5,
+      "soil": "loam",
+      "rootDepthM": 0.3,
+      "kc": 1.05,
+      "mulched": true,
+      "maxDepletion": 0.4,
+      "watering": {
+        "precipRateMmPerHour": 12,
+        "efficiency": 0.9
+      }
+    },
+    {
+      "id": "herbs",
+      "name": "Herb pots",
+      "areaM2": 1.2,
+      "soil": "sandy-loam",
+      "rootDepthM": 0.2,
+      "kc": 0.9,
+      "watering": {
+        "precipRateMmPerHour": 8,
+        "efficiency": 0.85
+      }
+    }
+  ],
+  "weather": {
+    "cacheHours": 6,
+    "rainLookaheadDays": 2
+  },
+  "notify": {
+    "server": "https://ntfy.sh",
+    "topic": ""
+  }
+}

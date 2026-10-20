@@ -1,0 +1,46 @@
+{
+  "name": "soak",
+  "version": "0.1.0",
+  "description": "Garden watering advisor: tracks soil-water deficit from free weather data, and advises when to water, how long, and when rain makes watering pointless.",
+  "type": "module",
+  "license": "MIT",
+  "bin": {
+    "soak": "./dist/src/cli.js"
+  },
+  "files": [
+    "dist/src",
+    "examples",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "pretest": "npm run build",
+    "test": "node --test \"dist/test/**/*.test.js\"",
+    "prepack": "npm run build"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "keywords": [
+    "garden",
+    "watering",
+    "irrigation",
+    "soil-moisture",
+    "evapotranspiration",
+    "open-meteo",
+    "weather",
+    "water-saving",
+    "gardening",
+    "cli",
+    "typescript"
+  ],
+  "devDependencies": {
+    "typescript": "^5.9.3",
+    "@types/node": "^26.6.5"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fuleinist/soak.git"
+  }
+}
