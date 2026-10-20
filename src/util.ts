@@ -78,6 +78,11 @@ export function round1(n: number): number {
   return Math.round(n * 10) / 10;
 }
 
+/** Round to two decimal places, as a number. */
+export function round2(n: number): number {
+  return Math.round(n * 100) / 100;
+}
+
 /** Format millimetres for display, e.g. "3.2 mm". */
 export function formatMm(n: number): string {
   return `${round1(n)} mm`;

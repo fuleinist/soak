@@ -10,6 +10,7 @@ import {
   localDateISO,
   pad2,
   round1,
+  round2,
   slugify,
   todayISO,
 } from "../src/util.js";
@@ -78,4 +79,10 @@ test("round1 and formatMm render friendly numbers", () => {
   assert.equal(round1(2), 2);
   assert.equal(formatMm(3.25), "3.3 mm");
   assert.equal(formatMm(0), "0 mm");
+});
+
+test("round2 rounds to two decimals", () => {
+  assert.equal(round2(3.14159), 3.14);
+  assert.equal(round2(10.086), 10.09);
+  assert.equal(round2(5), 5);
 });
