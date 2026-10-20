@@ -56,8 +56,9 @@ Per zone, a root-zone bucket:
 - PAW (mm) = AWC (mm/m) × rootDepthM.
 - Daily crop loss ETc = ET0 × kc. A mulched zone loses 30% less: ETc × 0.7.
 - Effective rain = 0.8 × rain (runoff and evaporation losses).
-- Deficit D: starts at the seed value, grows with ETc, shrinks with rain and logged waterings. It stays inside [0, PAW].
-- Seed: if a soil moisture reading exists, sRel = clamp01((sm − wp) / (fc − wp)) and D = (1 − sRel) × PAW. Else D = 0 (assume a full profile at the start of the history window).
+- Deficit D: starts at zero, grows with ETc, shrinks with rain and logged waterings. It stays inside [0, PAW].
+- Start: D = 0 at the start of the history window (a full profile 14 days ago).
+- Calibration: when a soil moisture reading exists, the model resets D at the end of the most recent completed day: D = (1 − sRel) × PAW, with sRel = clamp01((sm − wp) / (fc − wp)).
 - MAD (mm) = maxDepletion × PAW. Default maxDepletion = 0.5.
 
 ## Advice rules

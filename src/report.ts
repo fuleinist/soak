@@ -1,15 +1,8 @@
 /**
  * Text and JSON reports.
  */
-import type { PlanEntry, Verdict, ZoneAdvice, ZonePlan } from "./advisor.js";
+import { VERDICT_LABELS as LABELS, type PlanEntry, type ZoneAdvice, type ZonePlan } from "./advisor.js";
 import { formatMm, round1 } from "./util.js";
-
-const LABELS: Record<Verdict, string> = {
-  water: "WATER NOW",
-  wait: "WAIT FOR RAIN",
-  soon: "WATER SOON",
-  ok: "OK",
-};
 
 export interface StatusMeta {
   today: string;
@@ -17,11 +10,11 @@ export interface StatusMeta {
   fetchedAt: string;
   ageHours: number;
   dataRange: { start: string; end: string } | null;
-  seedNote: string | null;
+  modelNote: string | null;
   missingValues: number;
 }
 
-function amountText(
+export function amountText(
   needMm: number | undefined,
   litres: number | null | undefined,
   minutes: number | undefined,
@@ -54,8 +47,8 @@ export function formatStatusText(advices: ZoneAdvice[], meta: StatusMeta): strin
       `Weather data: ${meta.dataRange.start} .. ${meta.dataRange.end} (${round1(meta.ageHours)} h old)`,
     );
   }
-  if (meta.seedNote) {
-    lines.push(`Seed: ${meta.seedNote}`);
+  if (meta.modelNote) {
+    lines.push(`Model: ${meta.modelNote}`);
   }
   if (meta.missingValues > 0) {
     lines.push(`Warning: ${meta.missingValues} missing value(s) in the weather data.`);
@@ -74,7 +67,7 @@ export function statusJson(advices: ZoneAdvice[], meta: StatusMeta): Record<stri
       range: meta.dataRange,
       missingValues: meta.missingValues,
     },
-    seed: meta.seedNote,
+    model: meta.modelNote,
     zones: advices,
   };
 }

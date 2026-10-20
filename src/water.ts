@@ -84,11 +84,18 @@ export interface BalanceRow {
   depletion: number;
 }
 
+export interface Recalibration {
+  /** End of this day: the deficit is reset to deficitMm. */
+  date: string;
+  deficitMm: number;
+}
+
 export function simulateZone(
   zone: ZoneConfig,
   days: DailyWeather[],
   wateringsByDate: Record<string, number>,
   seedMm: number,
+  recalibration?: Recalibration,
 ): BalanceRow[] {
   const paw = pawMm(zone);
   let deficit = clamp(seedMm, 0, paw);
@@ -98,6 +105,9 @@ export function simulateZone(
     const effRain = effectiveRainMm(day.rainMm);
     const watering = wateringsByDate[day.date] ?? 0;
     deficit = clamp(deficit + etc - effRain - watering, 0, paw);
+    if (recalibration && day.date === recalibration.date) {
+      deficit = clamp(recalibration.deficitMm, 0, paw);
+    }
     rows.push({
       date: day.date,
       et0Mm: day.et0Mm,

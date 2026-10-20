@@ -118,19 +118,31 @@ test("planZone builds a day-by-day plan", () => {
   assert.equal(plan.zoneId, "herbs");
   assert.deepEqual(
     plan.entries.map((entry) => entry.verdict),
-    ["water", "wait", "wait", "ok"],
+    ["water", "ok", "ok", "ok"],
   );
   approx(plan.entries[0].needMm ?? -1, 10.8);
   assert.equal(plan.entries[0].date, "2026-10-21");
   assert.equal(plan.entries[3].date, "2026-10-24");
 });
 
+test("planZone skips when rain covers the deficit", () => {
+  const list = days(
+    ["2026-10-20", 12, 0],
+    ["2026-10-21", 2, 0],
+    ["2026-10-22", 2, 30],
+    ["2026-10-23", 2, 0],
+  );
+  const rows = simulateZone(herbs, list, {}, 0);
+  const plan = planZone(herbs, rows, list, { today: TODAY, rainLookaheadDays: 2 });
+  assert.deepEqual(
+    plan.entries.map((entry) => entry.verdict),
+    ["wait", "wait", "ok"],
+  );
+});
+
 test("planZone skips days without a prior state", () => {
   const list = days(["2026-10-20", 4, 0], ["2026-10-21", 4, 0]);
   const rows = simulateZone(herbs, list, {}, 0);
   const plan = planZone(herbs, rows, list, { today: "2026-10-20", rainLookaheadDays: 2 });
-  assert.deepEqual(
-    plan.entries.map((entry) => entry.date),
-    ["2026-10-21"],
-  );
+  assert.deepEqual(plan.entries, []);
 });

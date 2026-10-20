@@ -16,7 +16,7 @@ const meta: StatusMeta = {
   fetchedAt: "2026-10-20T19:00:00.000Z",
   ageHours: 0.1,
   dataRange: { start: "2026-10-07", end: "2026-10-27" },
-  seedNote: "soil moisture 0.2 m³/m³",
+  modelNote: "deficit calibrated to the soil moisture reading (0.19 m³/m³)",
   missingValues: 0,
 };
 
@@ -62,7 +62,7 @@ test("status text shows labels, amounts, and meta", () => {
   assert.ok(text.includes("soil is 45% depleted and rain will not cover it"));
   assert.ok(text.includes("OK"));
   assert.ok(text.includes("Weather data: 2026-10-07 .. 2026-10-27 (0.1 h old)"));
-  assert.ok(text.includes("Seed: soil moisture 0.2 m³/m³"));
+  assert.ok(text.includes("Model: deficit calibrated to the soil moisture reading (0.19 m³/m³)"));
   assert.ok(text.includes("water in the early morning"));
 });
 

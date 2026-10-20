@@ -2,9 +2,11 @@
  * Advice engine: turns the water balance into clear actions.
  */
 import type { ZoneConfig } from "./config.js";
-import { formatMm, round1 } from "./util.js";
+import { clamp, formatMm, round1 } from "./util.js";
 import {
+  effectiveRainMm,
   effectiveRainSum,
+  etcMm,
   madMm,
   pawMm,
   stateBefore,
@@ -15,6 +17,13 @@ import {
 import type { DailyWeather } from "./weather.js";
 
 export type Verdict = "water" | "wait" | "soon" | "ok";
+
+export const VERDICT_LABELS: Record<Verdict, string> = {
+  water: "WATER NOW",
+  wait: "WAIT FOR RAIN",
+  soon: "WATER SOON",
+  ok: "OK",
+};
 
 /** Below this amount, watering is not worth the effort. */
 export const MIN_USEFUL_MM = 2;
@@ -131,23 +140,28 @@ export function planZone(
   days: DailyWeather[],
   options: AdviceOptions,
 ): ZonePlan {
+  const start = stateBefore(zone, rows, options.today);
+  if (start === null) {
+    return { zoneId: zone.id, zoneName: zone.name, entries: [] };
+  }
+  const paw = pawMm(zone);
+  let state = start.deficitMm;
   const entries: PlanEntry[] = [];
   for (const day of days) {
     if (day.date < options.today) {
       continue;
     }
-    const state = stateBefore(zone, rows, day.date);
-    if (state === null) {
-      continue;
-    }
     const rainSum = effectiveRainSum(days, day.date, options.rainLookaheadDays);
-    const decision = decideAction(zone, state.deficitMm, rainSum);
+    const decision = decideAction(zone, state, rainSum);
     entries.push({
       date: day.date,
-      deficitMm: state.deficitMm,
+      deficitMm: state,
       rainSumMm: round1(rainSum),
       ...decision,
     });
+    // The plan assumes the gardener follows the advice.
+    const watering = decision.verdict === "water" ? (decision.needMm ?? 0) : 0;
+    state = clamp(state + etcMm(zone, day.et0Mm) - effectiveRainMm(day.rainMm) - watering, 0, paw);
   }
   return { zoneId: zone.id, zoneName: zone.name, entries };
 }

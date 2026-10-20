@@ -122,6 +122,33 @@ test("simulateZone clamps the seed value", () => {
   approx(rows[0].deficitMm, 20);
 });
 
+test("simulateZone re-seeds at the calibration date", () => {
+  const rows = simulateZone(
+    herbs,
+    days(
+      ["2026-10-17", 2, 0],
+      ["2026-10-18", 2, 0],
+      ["2026-10-19", 2, 0],
+      ["2026-10-20", 2, 0],
+    ),
+    {},
+    0,
+    { date: "2026-10-19", deficitMm: 15 },
+  );
+  approx(rows[0].deficitMm, 1.8);
+  approx(rows[1].deficitMm, 3.6);
+  approx(rows[2].deficitMm, 15); // reset at the end of the day
+  approx(rows[3].deficitMm, 16.8); // continues from the reset
+});
+
+test("simulateZone clamps the calibration value", () => {
+  const rows = simulateZone(herbs, days(["2026-10-19", 0, 0]), {}, 0, {
+    date: "2026-10-19",
+    deficitMm: 999,
+  });
+  approx(rows[0].deficitMm, 20);
+});
+
 test("stateBefore returns the end of the previous day", () => {
   const rows = simulateZone(
     herbs,
